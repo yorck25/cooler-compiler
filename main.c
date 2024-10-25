@@ -1,11 +1,46 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int readFile(char **inputStream) {
+    FILE *inputFile;
+    inputFile = fopen("input.txt", "r");
+
+    if (inputFile == NULL) {
+        printf("Not able to open the file\n");
+        return 1;
+    }
+
+    *inputStream = (char *)malloc(100 * sizeof(char));
+    if (*inputStream == NULL) {
+        printf("Memory allocation failed\n");
+        fclose(inputFile);
+        return 1;
+    }
+
+    if (fgets(*inputStream, 100, inputFile) == NULL) {
+        printf("Error reading from file\n");
+        fclose(inputFile);
+        free(*inputStream);
+        return 1;
+    }
+
+    fclose(inputFile);
+    return 0;
+}
 
 int main(void) {
-    char inputStream[] = "return 0;";
+    char *inputStream = NULL;
+
+    if (readFile(&inputStream) != 0) {
+        printf("Error while reading file\n");
+        return 1;
+    }
+
+    printf("Content of the file: %s\n", inputStream);
 
     //TODO Jonas
     // inputStream => array = ["return", "0", ";"]
 
-    printf("Hello, World!\n");
     return 0;
 }
