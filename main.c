@@ -33,7 +33,7 @@ int readFile(char **inputStream) {
 int generator() {
     FILE *fptr;
 
-    fptr = fopen("../output.s", "w");
+    fptr = fopen("../output/output.s", "w");
 
     fprintf(fptr, ".globl _main\n"
                   ".align 2\n"
@@ -83,8 +83,8 @@ int main() {
 
     generator();
 
-    system("chmod +x ../compile.sh");
-    system("../compile.sh");
+    system("chmod +x ../scripts/compile.sh");
+    system("../scripts/compile.sh");
 
     return 0;
 }
