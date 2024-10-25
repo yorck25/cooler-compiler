@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "parser.c"
 
 int readFile(char **inputStream) {
     FILE *inputFile;
@@ -31,6 +32,7 @@ int readFile(char **inputStream) {
 
 int main() {
     char *inputStream = NULL;
+    char *parsedTokens[255];
 
     if (readFile(&inputStream) != 0) {
         printf("Error while reading file\n");
@@ -38,46 +40,16 @@ int main() {
     }
 
     printf("Content of the file: %s\n", inputStream);
-    char inputStream[] = "return 0;";
 
-    size_t length = strlen(inputStream);
-
-
-    //TODO Jonas
-    // inputStream => array = ["return", "0", ";"]
-
-    int counter = 0;
-    int count = 0;
-
-    char str[3][10];
-
-    for (int i = 0; i < length; i++) {
-        if (inputStream[i] == ' ') {
-            strncpy (&str[count], &inputStream[counter], i-counter );
-            printf("out0: %c\n", inputStream[counter]);
-            str[count][i] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        } else if (inputStream[i] == '0') {
-            printf("out0: %c\n", inputStream[counter]);
-            strncpy (&str[count][0], &inputStream[counter], 1);
-            str[count][i+1] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        }
-        else if (inputStream[i] == ';') {
-            printf("out;: %c\n", inputStream[counter]);
-            strncpy (&str[count][0], &inputStream[counter], 1);
-            str[count][i] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        }
+    const int parsedCount = parse(&inputStream, parsedTokens);
+    if(parsedCount == 0){
+        printf("No tokens were passed back\n");
+        return 1;
     }
 
-    printf("str: %s", str[2]);
+    for(int i = 0; i < parsedCount + 1; i++){
+        printf("%s \n", parsedTokens[i]);
+    }
 
     return 0;
 }
