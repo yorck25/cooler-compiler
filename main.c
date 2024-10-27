@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "tokener.c"
 #include "parser.c"
 
 int readFile(char **inputStream) {
@@ -61,6 +62,8 @@ int generator() {
 }
 
 int main() {
+    token();
+
     char *inputStream = NULL;
     char *parsedTokens[255];
 
@@ -70,6 +73,7 @@ int main() {
     }
 
     printf("Content of the file: %s\n", inputStream);
+
 
     const int parsedCount = parse(&inputStream, parsedTokens);
     if (parsedCount == 0) {
