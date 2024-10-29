@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "parser.c"
 
 int readFile(char **inputStream) {
     FILE *inputFile;
-    inputFile = fopen("input.txt", "r");
+    inputFile = fopen("../input.txt", "r");
 
     if (inputFile == NULL) {
         printf("Not able to open the file\n");
         return 1;
     }
 
-    *inputStream = (char *)malloc(100 * sizeof(char));
+    *inputStream = (char *) malloc(100 * sizeof(char));
     if (*inputStream == NULL) {
         printf("Memory allocation failed\n");
         fclose(inputFile);
@@ -29,8 +30,39 @@ int readFile(char **inputStream) {
     return 0;
 }
 
+int generator() {
+    FILE *fptr;
+
+    fptr = fopen("../output/output.s", "w");
+
+    fprintf(fptr, ".globl _main\n"
+                  ".align 2\n"
+                  "\n"
+                  "_main:\n"
+                  "    b _terminate\n"
+                  "\n"
+                  "_printf:\n"
+                  "    mov X0, #1 // stdout\n"
+                  "    adr X1, helloworld // address of string\n"
+                  "    mov X2, #12 // length of string\n"
+                  "    mov X16, #4 // write to stdout\n"
+                  "    svc 0    // syscall\n"
+                  "\n"
+                  "_terminate:\n"
+                  "    mov X0, #69 // return 0\n"
+                  "    mov X16, #1 // terminate\n"
+                  "    svc 0    // syscall\n"
+                  "\n"
+                  "helloworld: .asciz \"Hello, world\" \n");
+
+    fclose(fptr);
+
+    return 0;
+}
+
 int main() {
     char *inputStream = NULL;
+    char *parsedTokens[255];
 
     if (readFile(&inputStream) != 0) {
         printf("Error while reading file\n");
@@ -38,46 +70,21 @@ int main() {
     }
 
     printf("Content of the file: %s\n", inputStream);
-    char inputStream[] = "return 0;";
 
-    size_t length = strlen(inputStream);
-
-
-    //TODO Jonas
-    // inputStream => array = ["return", "0", ";"]
-
-    int counter = 0;
-    int count = 0;
-
-    char str[3][10];
-
-    for (int i = 0; i < length; i++) {
-        if (inputStream[i] == ' ') {
-            strncpy (&str[count], &inputStream[counter], i-counter );
-            printf("out0: %c\n", inputStream[counter]);
-            str[count][i] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        } else if (inputStream[i] == '0') {
-            printf("out0: %c\n", inputStream[counter]);
-            strncpy (&str[count][0], &inputStream[counter], 1);
-            str[count][i+1] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        }
-        else if (inputStream[i] == ';') {
-            printf("out;: %c\n", inputStream[counter]);
-            strncpy (&str[count][0], &inputStream[counter], 1);
-            str[count][i] = '\0';
-            counter = i+1;
-            count++;
-            printf("%i\n", count);
-        }
+    const int parsedCount = parse(&inputStream, parsedTokens);
+    if (parsedCount == 0) {
+        printf("No tokens were passed back\n");
+        return 1;
     }
 
-    printf("str: %s", str[2]);
+    for (int i = 0; i < parsedCount + 1; i++) {
+        printf("%s \n", parsedTokens[i]);
+    }
+
+    generator();
+
+    system("chmod +x ../scripts/compile.sh");
+    system("../scripts/compile.sh");
 
     return 0;
 }
