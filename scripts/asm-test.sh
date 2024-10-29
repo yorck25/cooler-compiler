@@ -1,9 +1,8 @@
 as -o asm/index.o asm/index.s
-
-ld -o asm/index asm/index.o
+ld asm/index.o -o asm/index
 
 echo "Successfully compiled"
 
-open asm/index
+./asm/index
 
-echo $?
+echo "\nexit code "$?
