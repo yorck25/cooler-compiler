@@ -1,39 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "lib/reader.c"
 #include "lib/parser.c"
+#include "lib/tokener.c"
 #include "lib/generator.c"
 
-int readFile(char **inputStream) {
-    FILE *inputFile;
-    inputFile = fopen("../input.txt", "r");
-
-    if (inputFile == NULL) {
-        printf("Not able to open the file\n");
-        return 1;
-    }
-
-    *inputStream = (char *) malloc(100 * sizeof(char));
-    if (*inputStream == NULL) {
-        printf("Memory allocation failed\n");
-        fclose(inputFile);
-        return 1;
-    }
-
-    if (fgets(*inputStream, 100, inputFile) == NULL) {
-        printf("Error reading from file\n");
-        fclose(inputFile);
-        free(*inputStream);
-        return 1;
-    }
-
-    fclose(inputFile);
-    return 0;
-}
-
 int main() {
-    token();
-
     char *inputStream = NULL;
     char *parsedTokens[255];
 
@@ -44,11 +17,23 @@ int main() {
 
     const int parsedCount = parse(&inputStream, parsedTokens);
     if (parsedCount == 0) {
-        printf("No tokens were passed back\n");
+        printf("No tokens were passed back from parser\n");
         return 1;
     }
 
-    if(generator() != 0){
+    struct Token *tokens[parsedCount];
+
+    const int tokenizedCount = tokenizer(parsedTokens, parsedCount, tokens);
+    if (tokenizedCount == 0) {
+        printf("No tokens were passed back from tokenizer\n");
+        return 1;
+    }
+
+    for(int i = 0; i < tokenizedCount; i++){
+        printf("main: %u \n", tokens[i]->tokenType);
+    }
+
+    if(generator(tokens) != 0){
         printf("!! Failed to generate asm !!");
         return 1;
     }

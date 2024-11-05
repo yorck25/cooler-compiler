@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 
-int parse(char **inputStream, char *parsStr[]) {
+int parse(char **inputStream, char *parsedTokens[]) {
     size_t length = strlen(*inputStream);
     char buffer[64];
     int bufferPosition = 0;
@@ -17,14 +17,14 @@ int parse(char **inputStream, char *parsStr[]) {
         char c = (*inputStream)[i];
 
         if (c == ';') {
-            parsStr[counter] = strdup(buffer);
+            parsedTokens[counter] = strdup(buffer);
             bufferPosition = 0;
             counter++;
-            parsStr[counter] = ";";
+            parsedTokens[counter] = ";";
         }
         else if (isspace(c)) {
             buffer[bufferPosition] = '\0';
-            parsStr[counter] = strdup(buffer);
+            parsedTokens[counter] = strdup(buffer);
             bufferPosition = 0;
             counter++;
         }

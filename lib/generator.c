@@ -2,19 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-enum TokenType {
-    semi,
-    _return,
-    _int,
-    identifier,
-    assignment,
-    literal
-};
-
-struct Token {
-    enum TokenType tokenType;
-    char *value;
-};
 
 char *initASM() {
     char *line1 = ".globl _main\n";
@@ -50,7 +37,7 @@ int writer(char *input) {
     return 0;
 }
 
-int generator() {
+int generator(struct Token *tokens[]) {
     //just demo tokens
     //TODO implement that tokens get passed as params
     //-------
@@ -71,7 +58,7 @@ int generator() {
     token6.tokenType = literal;
     token6.value = "chat";
 
-    struct Token  tokens[99] = {token3, token4, token5, token6, token2, token1, token2};
+//    struct Token  tokens[99] = {token3, token4, token5, token6, token2, token1, token2};
 
     char *t = initASM();
     if (strlen(t) == 0) {
@@ -87,10 +74,10 @@ int generator() {
     int posInVars = 0;
 
     for(int i = 0; i < len; i++){
-        struct Token selectedToken = tokens[i];
+        struct Token selectedToken = *tokens[i];
 
         if(selectedToken.tokenType == _return){
-            if(tokens[i+1].tokenType != semi){
+            if(tokens[i+1]->tokenType != semi){
                 printf("Invalid syntax for return statement \n");
                 return 1;
             }
@@ -110,13 +97,13 @@ int generator() {
         }
 
         if(selectedToken.tokenType == _int){
-            if (tokens[i + 1].tokenType != identifier || tokens[i + 2].tokenType != assignment || tokens[i + 3].tokenType != literal || tokens[i + 4].tokenType != semi) {
+            if (tokens[i + 1]->tokenType != identifier || tokens[i + 2]->tokenType != assignment || tokens[i + 3]->tokenType != literal || tokens[i + 4]->tokenType != semi) {
                 printf("Invalid syntax for variable declaration\n");
                 return 1;
             }
 
-            char *varName = tokens[i + 1].value;
-            char *varValue = tokens[i + 3].value;
+            char *varName = tokens[i + 1]->value;
+            char *varValue = tokens[i + 3]->value;
 
             char varDecl[512];
             snprintf(varDecl, sizeof(varDecl), "\n %s: .string \"%s\"", varName, varValue);
