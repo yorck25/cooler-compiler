@@ -3,4 +3,5 @@ project(cooler_compiler C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(cooler_compiler main.c)
+add_executable(cooler_compiler main.c
+)

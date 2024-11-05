@@ -32,6 +32,8 @@ int readFile(char **inputStream) {
 }
 
 int main() {
+    token();
+
     char *inputStream = NULL;
     char *parsedTokens[255];
 
