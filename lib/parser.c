@@ -17,16 +17,32 @@ int parse(char **inputStream, char *parsedTokens[]) {
         char c = (*inputStream)[i];
 
         if (c == ';') {
-            parsedTokens[counter] = strdup(buffer);
-            bufferPosition = 0;
+            if (bufferPosition > 0) {
+                buffer[bufferPosition] = '\0';
+                parsedTokens[counter] = strdup(buffer);
+                counter++;
+                bufferPosition = 0;
+            }
+            parsedTokens[counter] = strdup(";");
             counter++;
-            parsedTokens[counter] = ";";
+        }
+        else if (c == '=') {
+            if (bufferPosition > 0) {
+                buffer[bufferPosition] = '\0';
+                parsedTokens[counter] = strdup(buffer);
+                counter++;
+                bufferPosition = 0;
+            }
+            parsedTokens[counter] = strdup("=");
+            counter++;
         }
         else if (isspace(c)) {
-            buffer[bufferPosition] = '\0';
-            parsedTokens[counter] = strdup(buffer);
-            bufferPosition = 0;
-            counter++;
+            if (bufferPosition > 0) {
+                buffer[bufferPosition] = '\0';
+                parsedTokens[counter] = strdup(buffer);
+                counter++;
+                bufferPosition = 0;
+            }
         }
         else if (isalnum(c)) {
             buffer[bufferPosition] = c;
