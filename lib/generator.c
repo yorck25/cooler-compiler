@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 char *initASM() {
     char *line1 = ".globl _main\n";
     char *line2 = ".align 2\n";

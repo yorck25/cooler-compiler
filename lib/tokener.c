@@ -20,10 +20,6 @@ int tokenizer(char *parsedTokens[], int len, struct Token *tokens[]) {
     int pos = 0;
 
     for (int i = 0; i < len; i++) {
-        printf("p: %s \n", parsedTokens[i]);
-    }
-
-    for (int i = 0; i < len; i++) {
         char *t =  parsedTokens[i];
         struct Token *newToken = malloc(sizeof(struct Token));
 
@@ -74,13 +70,6 @@ int tokenizer(char *parsedTokens[], int len, struct Token *tokens[]) {
             pos++;
             continue;
         }
-
-        free(newToken);
-    }
-
-    for (int i = 0; i < pos; i++) {
-        printf("t: %u ", tokens[i]->tokenType);
-        printf("t: %s \n", tokens[i]->value);
     }
 
     return pos;
