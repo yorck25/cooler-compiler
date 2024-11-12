@@ -29,7 +29,7 @@ int main() {
         return 1;
     }
 
-    if(generator(tokens) != 0){
+    if(generator(tokens, tokenizedCount) != 0){
         printf("!! Failed to generate asm !!");
         return 1;
     }

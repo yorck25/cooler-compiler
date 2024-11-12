@@ -64,7 +64,6 @@ int tokenizer(char *parsedTokens[], int len, struct Token *tokens[]) {
             tokens[pos++] = newAssignmentToken;
             tokens[pos++] = newLiteralToken;
 
-            free(newToken);
             i += 3;
             continue;
         }

@@ -37,43 +37,19 @@ int writer(char *input) {
     return 0;
 }
 
-int generator(struct Token *tokens[]) {
-    //just demo tokens
-    //TODO implement that tokens get passed as params
-    //-------
-    struct Token token1, token2, token3, token4, token5, token6;
-
-    token1.tokenType = _return;
-    token1.value = "1";
-
-    token2.tokenType = semi;
-
-    token3.tokenType = _int;
-
-    token4.tokenType = identifier;
-    token4.value = "myVar";
-
-    token5.tokenType = assignment;
-
-    token6.tokenType = literal;
-    token6.value = "chat";
-
-//    struct Token  tokens[99] = {token3, token4, token5, token6, token2, token1, token2};
-
+int generator(struct Token *tokens[], int count) {
     char *t = initASM();
     if (strlen(t) == 0) {
         printf("No asm init code");
         return 1;
     }
 
-    unsigned int len = sizeof(tokens) / sizeof(tokens[1]);
-
-    char createdFunctions[len][255];
-    char createdVars[len][255];
+    char createdFunctions[count][255];
+    char createdVars[count][255];
     int posInFunc = 0;
     int posInVars = 0;
 
-    for(int i = 0; i < len; i++){
+    for(int i = 0; i < count; i++){
         struct Token selectedToken = *tokens[i];
 
         if(selectedToken.tokenType == _return){
