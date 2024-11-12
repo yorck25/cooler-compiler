@@ -29,10 +29,6 @@ int main() {
         return 1;
     }
 
-    for(int i = 0; i < tokenizedCount; i++){
-        printf("main: %u \n", tokens[i]->tokenType);
-    }
-
     if(generator(tokens) != 0){
         printf("!! Failed to generate asm !!");
         return 1;
