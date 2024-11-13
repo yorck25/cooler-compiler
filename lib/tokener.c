@@ -16,6 +16,16 @@ struct Token {
     char *value;
 };
 
+
+int isAllDigits(char str[]) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (!isdigit(str[i])) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int tokenizer(char *parsedTokens[], int len, struct Token *tokens[]) {
     int pos = 0;
 
@@ -53,6 +63,11 @@ int tokenizer(char *parsedTokens[], int len, struct Token *tokens[]) {
 
             if(newLiteralToken->value == NULL){
                newLiteralToken->value = "0";
+            }
+
+            if (!isAllDigits(newLiteralToken->value)) {
+                printf("The string contains non-digit characters.\n");
+                return 0;
             }
 
             tokens[pos++] = newToken;
